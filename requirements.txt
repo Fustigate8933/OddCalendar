@@ -1,0 +1,4 @@
+fastapi[all]
+beatifulsoup4
+ics
+pydantic
