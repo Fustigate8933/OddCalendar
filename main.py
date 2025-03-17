@@ -2,11 +2,20 @@ from bs4 import BeautifulSoup
 from ics import Calendar, Event
 from datetime import datetime
 from fastapi import Response, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import os
 from pydantic import BaseModel
 import pytz
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 TIMEZONE = pytz.timezone("America/Toronto")
 
 def gen_calendar(source, out_path="odyssey_schedule.ics"):
@@ -53,8 +62,8 @@ class HTMLSource(BaseModel):
     html: str
 
 @app.post("/download-calendar")
-def download_calendar(source: HTMLSource):
-    ics_file = gen_calendar(source)
+def download_calendar(request: HTMLSource):
+    ics_file = gen_calendar(request.html)
 
     with open(ics_file, "r") as f:
         ics_content = f.read()
