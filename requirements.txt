@@ -2,3 +2,4 @@ fastapi[all]
 beautifulsoup4
 ics
 pydantic
+pytz
